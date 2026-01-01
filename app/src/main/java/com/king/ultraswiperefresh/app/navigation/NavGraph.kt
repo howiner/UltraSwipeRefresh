@@ -7,12 +7,14 @@ import androidx.navigation.navigation
 import com.king.ultraswiperefresh.app.sample.ClassicRefreshAutoLoadSample
 import com.king.ultraswiperefresh.app.sample.ClassicRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.CustomLottieRefreshIndicatorSample
+import com.king.ultraswiperefresh.app.sample.EMPTY
 import com.king.ultraswiperefresh.app.sample.LottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.ProgressRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.PullRefreshSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshSample
 import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
+import com.king.ultraswiperefresh.app.vm.VM
 
 /**
  * 导航图
@@ -21,7 +23,7 @@ import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
  */
-fun NavGraphBuilder.noteNavGraph(navController: NavController) {
+fun NavGraphBuilder.noteNavGraph(navController: NavController, vm: VM) {
     navigation(
         startDestination = NavRoute.UltraSwipeRefreshSample.name,
         route = NavRoute.Root.name
@@ -33,7 +35,7 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
             SwipeRefreshIndicatorSample()
         }
         composable(route = NavRoute.ClassicRefreshIndicatorSample.name) {
-            ClassicRefreshIndicatorSample()
+            ClassicRefreshIndicatorSample(navController, vm)
         }
         composable(route = NavRoute.ClassicRefreshAutoLoadSample.name) {
             ClassicRefreshAutoLoadSample()
@@ -52,6 +54,9 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         }
         composable(route = NavRoute.PullRefreshSample.name) {
             PullRefreshSample()
+        }
+        composable(route = NavRoute.EMPTY.name) {
+            EMPTY()
         }
     }
 }

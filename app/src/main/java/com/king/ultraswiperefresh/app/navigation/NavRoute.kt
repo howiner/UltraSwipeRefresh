@@ -28,4 +28,6 @@ enum class NavRoute {
     SwipeRefreshSample,
 
     PullRefreshSample,
+
+    EMPTY,
 }

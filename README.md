@@ -40,14 +40,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.2'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh:2.0.0'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.2'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-classic:2.0.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.2'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-lottie:2.0.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.2'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-progress:2.0.0'
     ```
 
 ## 使用
@@ -201,32 +201,3 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 > 如果以上的指示器效果都不满足你的需求，你可以自定义去实现Header和Footer对应的指示器，也可以直接使用Lottie动画样式的指示器，来快速接入任何Lottie动画。
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jenly1314.github.io/UltraSwipeRefresh/api/)
-
-## 相关推荐
-
-- [CodeTextField](https://github.com/jenly1314/CodeTextField)一个使用 Compose 实现的验证码输入框。
-- [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
-- [SuperSwipeRefreshLayout](https://github.com/jenly1314/SuperSwipeRefreshLayout) 是在SwipeRefreshLayout的基础之上扩展修改，让其支持上拉刷新。
-- [SuperSlidingPaneLayout](https://github.com/jenly1314/SuperSlidingPaneLayout) 是在SlidingPaneLayout的基础之上扩展修改，新增几种不同的侧滑效果。
-- [SuperTextView](https://github.com/jenly1314/SuperTextView) 一个在TextView的基础上扩展了几种动画效果的控件。
-- [LoadingView](https://github.com/jenly1314/LoadingView) 一个圆弧加载过渡动画，圆弧个数，大小，弧度，渐变颜色，完全可配。
-- [WaveView](https://github.com/jenly1314/WaveView) 一个水波纹动画控件视图，支持波纹数，波纹振幅，波纹颜色，波纹速度，波纹方向等属性完全可配。
-- [GiftSurfaceView](https://github.com/jenly1314/GiftSurfaceView) 一个适用于直播间送礼物拼图案的动画控件。
-- [FlutteringLayout](https://github.com/jenly1314/FlutteringLayout) 一个适用于直播间点赞桃心飘动效果的控件。
-- [DragPolygonView](https://github.com/jenly1314/DragPolygonView) 一个支持可拖动多边形，支持通过拖拽多边形的角改变其形状的任意多边形控件。
-- [CircleProgressView](https://github.com/jenly1314/CircleProgressView) 一个圆形的进度动画控件，动画效果纵享丝滑。
-- [ArcSeekBar](https://github.com/jenly1314/ArcSeekBar) 一个弧形的拖动条进度控件，配置参数完全可定制化。
-- [DrawBoard](https://github.com/jenly1314/DrawBoard) 一个自定义View实现的画板；方便对图片进行编辑和各种涂鸦相关操作。
-
-<!-- end -->
-
-## 版本日志
-
-#### v1.4.2 ：2025-9-6
-* 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
-
-#### [查看更多版本日志](CHANGELOG.md)
-
----
-
-![footer](https://jenly1314.github.io/page/footer.svg)

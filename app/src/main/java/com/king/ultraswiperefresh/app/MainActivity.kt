@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.king.ultraswiperefresh.app.navigation.NavRoute
 import com.king.ultraswiperefresh.app.navigation.noteNavGraph
 import com.king.ultraswiperefresh.app.ui.theme.RefreshLayoutTheme
+import com.king.ultraswiperefresh.app.vm.VM
 
 /**
  * UltraSwipeRefresh 使用示例
@@ -53,11 +55,12 @@ private fun MainScreen() {
                 })
 
                 val navController = rememberNavController()
+                val vm: VM= viewModel()
                 NavHost(
                     navController = navController,
                     startDestination = NavRoute.Root.name
                 ) {
-                    noteNavGraph(navController)
+                    noteNavGraph(navController,vm)
                 }
             }
         }

@@ -21,13 +21,15 @@ import kotlin.math.absoluteValue
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
+ * @modify godcok@gmail.com
  */
 @Composable
 fun rememberUltraSwipeRefreshState(
     isRefreshing: Boolean,
-    isLoading: Boolean
+    isLoading: Boolean,
+    initialIndicatorOffset: Float = 0f
 ): UltraSwipeRefreshState {
-    return remember { UltraSwipeRefreshState(isRefreshing, isLoading) }.apply {
+    return remember { UltraSwipeRefreshState(isRefreshing, isLoading, initialIndicatorOffset) }.apply {
         this.isRefreshing = isRefreshing
         this.isLoading = isLoading
     }
@@ -48,19 +50,53 @@ fun rememberUltraSwipeRefreshState(): UltraSwipeRefreshState {
  * @param isLoading 是否正在加载；初始化[UltraSwipeRefreshState.isLoading]
  */
 @Stable
-class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
+class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialIndicatorOffset: Float = 0f) {
 
     private val mutatorMutex = MutatorMutex()
 
     /**
+     * 刷新或者加载中的状态是否正在进行中
+     */
+    var isSwipeInRefreshRunning: Boolean = isRefreshing
+    var isSwipeInLoadingRunning: Boolean = isLoading
+
+    /**
      * 是否正在刷新
      */
-    var isRefreshing by mutableStateOf(isRefreshing)
+    private var _isRefreshing = mutableStateOf(isRefreshing)
+
+    /**
+     * 是否正在刷新
+     */
+    var isRefreshing: Boolean
+        get() = _isRefreshing.value
+        set(value) {
+            isSwipeInRefreshRunning = value
+            _isRefreshing.value = value
+            updateHeaderState()
+        }
 
     /**
      * 是否正在加载
      */
-    var isLoading by mutableStateOf(isLoading)
+    /**
+     * 是否正在刷新
+     */
+    private var _isLoading = mutableStateOf(isLoading)
+
+    /**
+     * 是否正在刷新
+     */
+    var isLoading: Boolean
+        get() = _isLoading.value
+        set(value) {
+//            if (!value) {
+            isSwipeInLoadingRunning = value
+//            }
+            _isLoading.value = value
+            updateFooterState()
+        }
+
 
     /**
      * 是否正在完成（当[isRefreshing]的值从true变为false或[isLoading]的值从true变为false时，会有一个Header或Footer收起的临时状态，即：[isFinishing]）
@@ -113,7 +149,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 指示器偏移量
      */
-    private val _indicatorOffset = Animatable(0f)
+    private val _indicatorOffset = Animatable(initialIndicatorOffset)
 
     /**
      * 指示器当前偏移量；当indicatorOffset大于0时，表示Header显示，当indicatorOffset小于0时，表示Footer显示
@@ -149,9 +185,17 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
         mutatorMutex.mutate(MutatePriority.UserInput) {
             _indicatorOffset.snapTo(
                 if (indicatorOffset > 0f) {
-                    indicatorOffset.plus(delta).coerceIn(0f, headerMaxOffset)
+                    if (isLoading) {
+                        0f
+                    } else {
+                        indicatorOffset.plus(delta).coerceIn(0f, headerMaxOffset)
+                    }
                 } else if (indicatorOffset < 0f) {
-                    indicatorOffset.plus(delta).coerceIn(footerMinOffset, 0f)
+                    if (isRefreshing) {
+                        0f
+                    } else {
+                        indicatorOffset.plus(delta).coerceIn(footerMinOffset, 0f)
+                    }
                 } else {
                     indicatorOffset.plus(delta).coerceIn(footerMinOffset, headerMaxOffset)
                 }.takeIf { it.absoluteValue >= 0.5f } ?: 0f

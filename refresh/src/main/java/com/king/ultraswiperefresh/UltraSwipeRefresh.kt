@@ -59,6 +59,9 @@ import kotlinx.coroutines.launch
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
+ *
+ * @modify godcok@gmail.com
+ *
  */
 @Composable
 fun UltraSwipeRefresh(
@@ -136,13 +139,28 @@ fun UltraSwipeRefresh(
             LaunchedEffect(state.isSwipeInProgress, state.isRefreshing, state.isLoading) {
                 if (!state.isSwipeInProgress) {
                     when {
-                        state.isRefreshing -> state.animateOffsetTo(headerHeight.toFloat())
-                        state.isLoading -> state.animateOffsetTo(-footerHeight.toFloat())
+                        state.isRefreshing -> {
+                            if (!state.isSwipeInRefreshRunning || state.indicatorOffset > headerHeight.toFloat()) {
+                                state.animateOffsetTo(headerHeight.toFloat())
+                            }
+                            state.isSwipeInRefreshRunning = true
+                        }
+
+                        state.isLoading -> {
+                            if (!state.isSwipeInLoadingRunning || state.indicatorOffset < -footerHeight.toFloat()) {
+                                state.animateOffsetTo(-footerHeight.toFloat())
+                            }
+                            state.isSwipeInLoadingRunning = true
+                        }
+
                         state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {
                             coroutineScope.launch {
                                 state.isFinishing = true
                                 if (state.headerState == UltraSwipeHeaderState.Refreshing) {
-                                    state.animateOffsetTo(headerHeight.toFloat())
+                                    if (state.indicatorOffset > 0) {
+                                        state.animateOffsetTo(state.indicatorOffset)
+                                    }
+
                                 } else if (state.footerState == UltraSwipeFooterState.Loading) {
                                     state.animateOffsetTo(-footerHeight.toFloat())
                                 }
@@ -184,7 +202,9 @@ fun UltraSwipeRefresh(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .graphicsLayer {
-                            translationY = obtainFooterOffset(state, footerScrollMode, footerHeight)
+                            if (state.headerState != UltraSwipeHeaderState.Refreshing) {
+                                translationY = obtainFooterOffset(state, footerScrollMode, footerHeight)
+                            }
                         }
                         .zIndex(obtainZIndex(footerScrollMode))
                 ) {
@@ -312,12 +332,12 @@ private fun obtainContentOffset(
     val indicatorOffset = state.indicatorOffset
     return if (indicatorOffset > 0f) {
         when (headerStyle) {
-            NestedScrollMode.Translate, NestedScrollMode.FixedBehind -> indicatorOffset
+            NestedScrollMode.Translate, NestedScrollMode.FixedBehind -> if (state.isLoading) 0f else indicatorOffset
             NestedScrollMode.FixedContent, NestedScrollMode.FixedFront -> 0f
         }
     } else {
         when (footerStyle) {
-            NestedScrollMode.Translate, NestedScrollMode.FixedBehind -> indicatorOffset
+            NestedScrollMode.Translate, NestedScrollMode.FixedBehind -> if (state.isRefreshing) 0f else indicatorOffset
             NestedScrollMode.FixedContent, NestedScrollMode.FixedFront -> 0f
         }
     }

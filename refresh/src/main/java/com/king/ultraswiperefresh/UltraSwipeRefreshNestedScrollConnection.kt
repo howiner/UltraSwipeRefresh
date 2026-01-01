@@ -4,9 +4,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Velocity
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * 主要用于处理和协调Header或Footer与内容多个元素之间的滚动事件。
@@ -14,6 +14,9 @@ import kotlin.math.roundToInt
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
+ *
+ * @modify godcok@gmail.com
+ *
  */
 internal class UltraSwipeRefreshNestedScrollConnection(
     val state: UltraSwipeRefreshState,
@@ -27,11 +30,14 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     var loadMoreEnabled: Boolean = false
     var alwaysScrollable: Boolean = false
 
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset = when {
+    override fun onPreScroll(
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset = when {
         // 当下拉刷新和上拉加载都未启用时，则直接返回：Offset.Zero
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
         // 当正在刷新或正在加载或处理正在完成时，交由 [obtainAvailable] 处理
-        state.isRefreshing || state.isLoading || state.isFinishing -> obtainAvailable(available)
+        !alwaysScrollable && (state.isRefreshing || state.isLoading || state.isFinishing) -> available
         // 当都Header和Footer都未显示时，则直接返回：Offset.Zero
         state.indicatorOffset == 0f -> Offset.Zero
         // 当正在滑动时，则进行处理
@@ -47,7 +53,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         // 当下拉刷新和上拉加载都未启用时，则直接返回：Offset.Zero
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
         // 当正在刷新或正在加载或处理正在完成时，交由 [obtainAvailable] 处理
-        state.isRefreshing || state.isLoading || state.isFinishing -> obtainAvailable(available)
+        !alwaysScrollable && (state.isRefreshing || state.isLoading || state.isFinishing) -> available
         // 当正在滑动时，则进行处理
         source == NestedScrollSource.UserInput -> onScroll(available)
         else -> Offset.Zero
@@ -65,7 +71,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
                 return Offset.Zero
             }
 
-            if (state.headerState != UltraSwipeHeaderState.Refreshing && state.footerState != UltraSwipeFooterState.Loading) {
+            if (alwaysScrollable || (state.headerState != UltraSwipeHeaderState.Refreshing && state.footerState != UltraSwipeFooterState.Loading)) {
                 state.isSwipeInProgress = true
                 coroutineScope.launch {
                     val dragConsumed = available.y * dragMultiplier
@@ -81,6 +87,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
 
         return Offset.Zero
     }
+
 
     override suspend fun onPreFling(available: Velocity): Velocity {
         if (state.isRefreshing || state.isLoading || state.isFinishing) {
@@ -103,22 +110,25 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         return Velocity.Zero
     }
 
-    /**
-     * 根据 [alwaysScrollable] 来决定可用的 [Offset]
-     */
-    private fun obtainAvailable(available: Offset) = if (alwaysScrollable) {
-        Offset.Zero
-    } else {
-        available
-    }
+//    /**
+//     * 根据 [alwaysScrollable] 来决定可用的 [Offset]
+//     */
+//    private fun obtainAvailable(available: Offset) = if (alwaysScrollable) {
+//        Offset.Zero
+//    } else {
+//        available
+//    }
 
     /**
      * 根据 [alwaysScrollable] 来决定可用的 [Velocity]
      */
     private fun obtainAvailable(available: Velocity) = if (alwaysScrollable) {
-        Velocity.Zero
+        if (state.indicatorOffset != 0f) {
+            available
+        } else {
+            Velocity.Zero
+        }
     } else {
-        available
+        Velocity.Zero
     }
-
 }
