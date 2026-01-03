@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.king.ultraswiperefresh.app.sample.ClassicRefreshAutoLoadSample
 import com.king.ultraswiperefresh.app.sample.ClassicRefreshIndicatorSample
+import com.king.ultraswiperefresh.app.sample.ClassicRefreshKeepHeaderLocationIndicatorSample
+import com.king.ultraswiperefresh.app.sample.ClassicRefreshKeepHeaderLocationIndicatorSample1
 import com.king.ultraswiperefresh.app.sample.CustomLottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.EMPTY
 import com.king.ultraswiperefresh.app.sample.LottieRefreshIndicatorSample
@@ -14,7 +16,8 @@ import com.king.ultraswiperefresh.app.sample.PullRefreshSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshSample
 import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
-import com.king.ultraswiperefresh.app.vm.VM
+import com.king.ultraswiperefresh.app.vm.VMKeepHeaderLocation
+import com.king.ultraswiperefresh.app.vm.VMKeepHeaderLocation1
 
 /**
  * 导航图
@@ -23,7 +26,7 @@ import com.king.ultraswiperefresh.app.vm.VM
  * <p>
  * <a href="https://github.com/jenly1314">Follow me</a>
  */
-fun NavGraphBuilder.noteNavGraph(navController: NavController, vm: VM) {
+fun NavGraphBuilder.noteNavGraph(navController: NavController, vmkeep: VMKeepHeaderLocation, vmkeep1: VMKeepHeaderLocation1) {
     navigation(
         startDestination = NavRoute.UltraSwipeRefreshSample.name,
         route = NavRoute.Root.name
@@ -35,7 +38,13 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController, vm: VM) {
             SwipeRefreshIndicatorSample()
         }
         composable(route = NavRoute.ClassicRefreshIndicatorSample.name) {
-            ClassicRefreshIndicatorSample(navController, vm)
+            ClassicRefreshIndicatorSample(navController)
+        }
+        composable(route = NavRoute.ClassicRefreshKeepHeaderLocationIndicatorSample.name) {
+            ClassicRefreshKeepHeaderLocationIndicatorSample(navController, vmkeep)
+        }
+        composable(route = NavRoute.ClassicRefreshKeepHeaderLocationIndicatorSample1.name) {
+            ClassicRefreshKeepHeaderLocationIndicatorSample1(navController, vmkeep1)
         }
         composable(route = NavRoute.ClassicRefreshAutoLoadSample.name) {
             ClassicRefreshAutoLoadSample()

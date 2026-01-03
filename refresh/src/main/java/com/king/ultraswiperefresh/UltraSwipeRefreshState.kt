@@ -55,10 +55,10 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
     private val mutatorMutex = MutatorMutex()
 
     /**
-     * 刷新或者加载中的状态是否正在进行中
+     * 标记需要自动触发刷新动画
      */
-    var isSwipeInRefreshRunning: Boolean = isRefreshing
-    var isSwipeInLoadingRunning: Boolean = isLoading
+    private var _shouldTriggerHeaderAnimation = mutableStateOf(false)
+    val shouldTriggerHeaderAnimation: Boolean get() = _shouldTriggerHeaderAnimation.value
 
     /**
      * 是否正在刷新
@@ -71,14 +71,10 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
     var isRefreshing: Boolean
         get() = _isRefreshing.value
         set(value) {
-            isSwipeInRefreshRunning = value
             _isRefreshing.value = value
             updateHeaderState()
         }
 
-    /**
-     * 是否正在加载
-     */
     /**
      * 是否正在刷新
      */
@@ -90,9 +86,6 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
     var isLoading: Boolean
         get() = _isLoading.value
         set(value) {
-//            if (!value) {
-            isSwipeInLoadingRunning = value
-//            }
             _isLoading.value = value
             updateFooterState()
         }
@@ -238,6 +231,23 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
             isSwipeInProgress && isExceededLoadMoreTrigger() -> UltraSwipeFooterState.ReleaseToLoad
             else -> UltraSwipeFooterState.PullUpToLoad
         }
+    }
+
+    /**
+     * 仅仅只是让header露出来，没有其他作用，需要配合外部isRefreshing来使用
+     */
+    fun triggerHeaderAnimation() {
+        if (!_isLoading.value) {
+            _isRefreshing.value = true
+            _shouldTriggerHeaderAnimation.value = true
+        }
+    }
+
+    /**
+     * 重置自动刷新标志
+     */
+    internal fun resetHeaderAnimationFlag() {
+        _shouldTriggerHeaderAnimation.value = false
     }
 
 }

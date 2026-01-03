@@ -14,6 +14,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,23 +29,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.king.ultraswiperefresh.UltraSwipeRefresh
 import com.king.ultraswiperefresh.app.component.ColumnItem
+import com.king.ultraswiperefresh.app.navigation.NavRoute
+import com.king.ultraswiperefresh.app.vm.VMKeepHeaderLocation
 import com.king.ultraswiperefresh.indicator.classic.ClassicRefreshFooter
 import com.king.ultraswiperefresh.indicator.classic.ClassicRefreshHeader
-import com.king.ultraswiperefresh.rememberUltraSwipeRefreshState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * 经典的刷新样式示例
+ * 经典的刷新样式示例，保留头部位置
  *
- * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
- * <p>
- * <a href="https://github.com/jenly1314">Follow me</a>
- *
+ * @author godcok@gmail.com
  */
 @Composable
-fun ClassicRefreshIndicatorSample(navController: NavController) {
-    val state = rememberUltraSwipeRefreshState()
+fun ClassicRefreshKeepHeaderLocationIndicatorSample(navController: NavController, vm: VMKeepHeaderLocation) {
+    val state by vm.state.collectAsState()
     var itemCount by remember { mutableIntStateOf(20) }
     var hasMoreData by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
@@ -57,16 +56,19 @@ fun ClassicRefreshIndicatorSample(navController: NavController) {
     }
     Column {
         Row {
+            Button(onClick = { navController.navigate(NavRoute.EMPTY.name) }) {
+                Text("to Empty")
+            }
+
             Button(onClick = {
                 coroutineScope.launch {
                     lazyListState.scrollToItem(0)
-                    state.isRefreshing = true
-                    state.triggerHeaderAnimation()
+                    vm.autoRefresh()
                     // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
                     delay(2000)
                     itemCount = 20
                     hasMoreData = true
-                    state.isRefreshing = false
+//                    vm.finishRefresh()
                 }
             }) {
                 Text("auto refresh")
@@ -76,22 +78,22 @@ fun ClassicRefreshIndicatorSample(navController: NavController) {
             state = state,
             onRefresh = {
                 coroutineScope.launch {
-                    state.isRefreshing = true
+                    vm.refresh()
                     // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
                     delay(2000)
                     itemCount = 20
                     hasMoreData = true
-                    state.isRefreshing = false
+                    vm.finishRefresh()
                 }
             },
             onLoadMore = {
                 if (hasMoreData) {
                     coroutineScope.launch {
-                        state.isLoading = true
+                        vm.loadMore()
                         // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
                         delay(2000)
                         itemCount += 20
-                        state.isLoading = false
+                        vm.finishLoadMore()
                     }
                 }
             },

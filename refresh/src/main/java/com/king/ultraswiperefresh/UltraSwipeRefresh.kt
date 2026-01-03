@@ -136,21 +136,23 @@ fun UltraSwipeRefresh(
                 state.footerMinOffset = -footerHeight.times(footerMaxOffsetRate)
             }
 
-            LaunchedEffect(state.isSwipeInProgress, state.isRefreshing, state.isLoading) {
+            LaunchedEffect(state.isSwipeInProgress, state.shouldTriggerHeaderAnimation, state.isRefreshing, state.isLoading) {
                 if (!state.isSwipeInProgress) {
                     when {
-                        state.isRefreshing -> {
-                            if (!state.isSwipeInRefreshRunning || state.indicatorOffset > headerHeight.toFloat()) {
+                        state.shouldTriggerHeaderAnimation -> {
+                            if (!state.isLoading) {
+                                state.isRefreshing = true
                                 state.animateOffsetTo(headerHeight.toFloat())
                             }
-                            state.isSwipeInRefreshRunning = true
+                            state.resetHeaderAnimationFlag()
+                        }
+
+                        state.isRefreshing -> {
+                            state.animateOffsetTo(state.indicatorOffset.coerceAtMost(headerHeight.toFloat()))
                         }
 
                         state.isLoading -> {
-                            if (!state.isSwipeInLoadingRunning || state.indicatorOffset < -footerHeight.toFloat()) {
-                                state.animateOffsetTo(-footerHeight.toFloat())
-                            }
-                            state.isSwipeInLoadingRunning = true
+                            state.animateOffsetTo(state.indicatorOffset.coerceAtLeast(-footerHeight.toFloat()))
                         }
 
                         state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {

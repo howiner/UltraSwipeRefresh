@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class VM : ViewModel() {
+class VMKeepHeaderLocation1 : ViewModel() {
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _indicatorOffset = MutableStateFlow<Float>(0f)
+    private val _indicatorOffset = MutableStateFlow(0f)
     var indicatorOffset: StateFlow<Float> = _indicatorOffset.asStateFlow()
     fun updateIndicatorOffset(offset: Float) {
         _indicatorOffset.value = offset

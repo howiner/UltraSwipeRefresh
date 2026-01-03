@@ -17,6 +17,10 @@ enum class NavRoute {
 
     ClassicRefreshIndicatorSample,
 
+    ClassicRefreshKeepHeaderLocationIndicatorSample,
+
+    ClassicRefreshKeepHeaderLocationIndicatorSample1,
+
     ClassicRefreshAutoLoadSample,
 
     ProgressRefreshIndicatorSample,
