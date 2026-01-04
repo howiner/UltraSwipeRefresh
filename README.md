@@ -40,14 +40,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.howiner.UltraSwipeRefresh:refresh:2.0.0'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh:2.0.2'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-classic:2.0.0'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-classic:2.0.2'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-lottie:2.0.0'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-lottie:2.0.2'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-progress:2.0.0'
+    implementation 'com.github.howiner.UltraSwipeRefresh:refresh-indicator-progress:2.0.2'
     ```
 
 ## 使用
