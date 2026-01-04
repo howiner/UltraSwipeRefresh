@@ -58,7 +58,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
      * 标记需要自动触发刷新动画
      */
     private var _shouldTriggerHeaderAnimation = mutableStateOf(false)
-    val shouldTriggerHeaderAnimation: Boolean get() = _shouldTriggerHeaderAnimation.value
+    internal val shouldTriggerHeaderAnimation: Boolean get() = _shouldTriggerHeaderAnimation.value
 
     /**
      * 是否正在刷新
@@ -72,7 +72,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
         get() = _isRefreshing.value
         set(value) {
             _isRefreshing.value = value
-            updateHeaderState()
+//            updateHeaderState()
         }
 
     /**
@@ -87,7 +87,6 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
         get() = _isLoading.value
         set(value) {
             _isLoading.value = value
-            updateFooterState()
         }
 
 
@@ -240,6 +239,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean, initialI
         if (!_isLoading.value) {
             _isRefreshing.value = true
             _shouldTriggerHeaderAnimation.value = true
+            updateHeaderState()
         }
     }
 

@@ -68,7 +68,7 @@ fun ClassicRefreshKeepHeaderLocationIndicatorSample(navController: NavController
                     delay(2000)
                     itemCount = 20
                     hasMoreData = true
-//                    vm.finishRefresh()
+                    vm.finishRefresh()
                 }
             }) {
                 Text("auto refresh")
